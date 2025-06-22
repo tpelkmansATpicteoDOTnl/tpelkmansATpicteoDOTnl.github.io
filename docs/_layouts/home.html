@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ page.title | escape }} | {{ site.title | escape }}</title>
+    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    <!-- ...other head content... -->
+  </head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">Twan's Doc Site</h1>
+    <p class="site-subtitle">Handige artikelen over databases en meer</p>
+  </header>
+  <div class="container">
+      <main class="content">
+  {{ content }}
+  {% if paginator %}
+    {% assign posts = paginator.posts %}
+  {% else %}
+    {% assign posts = site.posts %}
+  {% endif %}
+  {% for post in posts %}
+    <article>
+      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+      <p>
+        <strong>Date:</strong> {{ post.date | date: "%Y-%m-%d" }}<br>
+        <strong>Category:</strong>
+        {% if post.categories.size > 0 %}
+          {{ post.categories | join: ", " }}
+        {% else %}
+          None
+        {% endif %}
+      </p>
+      <p>{{ post.excerpt }}</p>
+    </article>
+  {% endfor %}
+</main>
+<aside class="sidebar">
+  <h3>Articles by Category</h3>
+  <ul>
+    {% assign categories = site.categories | sort %}
+    {% for category in categories %}
+      <li>
+        <strong>{{ category[0] }}</strong>
+        <ul>
+          {% assign posts_sorted = category[1] | sort: "date" | reverse %}
+          {% for post in posts_sorted %}
+            <li>
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              <span style="color: #888; font-size: 0.9em;">
+                ({{ post.date | date: "%Y-%m-%d" }})
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+</aside>
+    </div>
+        </div> <!-- end .container -->
+    <footer class="site-footer">
+      <p>
+        &copy; {{ site.time | date: "%Y" }} Twan's Doc Site. All rights reserved.<br>
+        <small>Disclaimer: De informatie op deze site is informatief en zonder garanties.</small><br>
+        <a href="https://www.linkedin.com/in/jouw-linkedin-profiel/" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+    </footer>
+  </body>
+</html>
+  </body>
+</html>
