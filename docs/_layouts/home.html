@@ -8,7 +8,7 @@
   </head>
 <body>
 <header class="site-header">
-  <img src="/assets/img/picteo.jpg" alt="Site Logo" class="site-logo" />
+  <img src="{{ '/assets/img/Picteo.jpg' | relative_url }}" alt="Site Logo" class="site-logo" />
   <div class="site-titleblock">
     <h1 class="site-title">Twan's Article Site</h1>
     <p class="site-subtitle">Valued articles on SQL Server databases and more</p>
@@ -30,7 +30,7 @@
       {% if post.image %}
         <img src="{{ post.image | relative_url }}" alt="Article image" class="article-image" />
       {% else %}
-        <img src="{{ '\assets\img\picteo.jpg' }}" alt="Default" class="article-image" />
+        <img src="{{ '/assets/img/Picteo.jpg' | relative_url }}" alt="Default" class="article-image" />
       {% endif %}
       <div class="article-meta">
         <span class="article-date">{{ post.date | date: "%Y-%m-%d" }}</span>
