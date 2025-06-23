@@ -1,47 +1,48 @@
-.site-logo {
-  height: 48px;
-  vertical-align: middle;
-  margin-right: 1rem;
-}
 .site-header {
   background: #2d3e50;
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-    padding: 2rem 0 1rem 0;
+  justify-content: center; /* Center content horizontally */
+  gap: 2rem;
+  padding: 0 2rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  /* ...existing code... */
+  position: relative;
 }
+
+.site-logo {
+  height: 100%;
+  max-height: 120px;
+  width: auto;
+  margin-right: 2rem;
+  margin-left: 0;
+}
+
 .site-titleblock {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
 }
-.site-title {
-  display: block;
-  margin: 0;
-  font-size: 2.5rem;
-  letter-spacing: 2px;
-}
-.site-subtitle {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #b0c4d6;
-  vertical-align: center;
-}
-.container {
-  display: flex;
-  gap: 2rem;
+
+.site-title, .site-subtitle {
+  text-align: center;
 }
 body {
+  font-family: 'Inter', Arial, sans-serif;
+  line-height: 1.7;
+  font-size: 1.1rem;
   background: #f3f6fa; 
   background-size: 300px;
   min-height: 100vh;
 }
 .content {
   flex: 3;
+}
+.container {
+  display: flex;
+  gap: 2rem;
+  padding-bottom: 120px; /* Add this line, adjust if your footer is taller */
 }
 .sidebar {
   flex: 1;
@@ -51,6 +52,19 @@ body {
   position: sticky;
   top: 1rem;
   height: fit-content;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 1.5rem 1rem;
+}
+@media (max-width: 800px) {
+  .container {
+    flex-direction: column;
+  }
+  .sidebar {
+    margin-top: 2rem;
+    border-left: none;
+    border-top: 1px solid #eee;
+  }
 }
 .site-footer {
   background: #2d3e50;
@@ -64,4 +78,66 @@ body {
   bottom: 0;
   width: 100%;
   z-index: 100;
+}
+.article-preview {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: none;
+}
+.article-image {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.article-meta {
+  font-size: 0.9em;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+.article-date,
+.article-author {
+  font-size: 0.9em;
+}
+.article-title {
+  margin: 0.2em 0 0.5em 0;
+}
+.article-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.article-link:hover .article-preview {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px) scale(1.01);
+}
+.category-toggle {
+  background: none;
+  border: none;
+  color: #2d3e50;
+  font-weight: bold;
+  font-size: 1.1em;
+  cursor: pointer;
+  padding: 0.3em 0;
+  width: 100%;
+  text-align: left;
+}
+.category-toggle:after {
+  content: " ▼";
+  font-size: 0.8em;
+  color: #888;
+  transition: transform 0.2s;
+}
+.category-toggle.open:after {
+  transform: rotate(-180deg);
+}
+.post-list {
+  margin-left: 1em;
+  margin-bottom: 0.5em;
 }
