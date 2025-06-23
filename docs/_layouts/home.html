@@ -3,17 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title>{{ page.title | escape }} | {{ site.title | escape }}</title>
-    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <!-- ...other head content... -->
   </head>
 <body>
-  <header class="site-header">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Microsoft_SQL_Server_2025_icon.svg" alt="Site Logo" class="site-logo" />
-    <div class="site-titleblock">
-      <h1 class="site-title">Twan's Doc Site</h1>
-      <p class="site-subtitle">Handige artikelen over SQL Server databases en meer</p>
-     </div>
-  </header>
+<header class="site-header">
+  <img src="/assets/img/picteo.jpg" alt="Site Logo" class="site-logo" />
+  <div class="site-titleblock">
+    <h1 class="site-title">Twan's Article Site</h1>
+    <p class="site-subtitle">Valued articles on SQL Server databases and more</p>
+  </div>
+  <div style="width:160px"></div> <!-- Spacer for symmetry, adjust width to match logo -->
+</header>
   <div class="container">
       <main class="content">
   {{ content }}
@@ -23,40 +24,63 @@
     {% assign posts = site.posts %}
   {% endif %}
   {% for post in posts %}
-    <article>
-      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-      <p>
-        <strong>Date:</strong> {{ post.date | date: "%Y-%m-%d" }}<br>
+  {% unless post.categories contains "Archived" %}
+    <a href="{{ post.url | relative_url }}" class="article-link">
+    <article class="article-preview">
+      {% if post.image %}
+        <img src="{{ post.image | relative_url }}" alt="Article image" class="article-image" />
+      {% else %}
+        <img src="{{ '\assets\img\picteo.jpg' }}" alt="Default" class="article-image" />
+      {% endif %}
+      <div class="article-meta">
+        <span class="article-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+        {% if post.author %}
+          &nbsp;|&nbsp;<span class="article-author">{{ post.author }}</span>
+        {% endif %}
         <strong>Category:</strong>
         {% if post.categories.size > 0 %}
           {{ post.categories | join: ", " }}
         {% else %}
           None
         {% endif %}
-      </p>
-      <p>{{ post.excerpt }}</p>
+      </div>
+      <h2 class="article-title">{{ post.title }}</h2>
     </article>
+    </a>
+  {% endunless %}
   {% endfor %}
 </main>
 <aside class="sidebar">
   <h3>Articles by Category</h3>
-  <ul>
+  <ul class="category-list">
     {% assign categories = site.categories | sort %}
     {% for category in categories %}
-      <li>
-        <strong>{{ category[0] }}</strong>
-        <ul>
-          {% assign posts_sorted = category[1] | sort: "date" | reverse %}
-          {% for post in posts_sorted %}
-            <li>
-              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              <span style="color: #888; font-size: 0.9em;">
-                ({{ post.date | date: "%Y-%m-%d" }})
-              </span>
-            </li>
-          {% endfor %}
-        </ul>
-      </li>
+      {% assign posts_sorted = category[1] | sort: "date" | reverse %}
+      {% if category[0] == "Archived" %}
+        {% assign visible_posts = posts_sorted %}
+      {% else %}
+        {% assign visible_posts = "" | split: "" %}
+        {% for post in posts_sorted %}
+          {% unless post.categories contains "Archived" %}
+            {% assign visible_posts = visible_posts | push: post %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+      {% if visible_posts.size > 0 %}
+        <li class="category-item">
+          <button class="category-toggle" type="button">{{ category[0] }}</button>
+          <ul class="post-list" style="display:none;">
+            {% for post in visible_posts %}
+              <li>
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                <span style="color: #888; font-size: 0.9em;">
+                  ({{ post.date | date: "%Y-%m-%d" }})
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endif %}
     {% endfor %}
   </ul>
 </aside>
@@ -64,12 +88,30 @@
         </div> <!-- end .container -->
     <footer class="site-footer">
       <p>
-        &copy; {{ site.time | date: "%Y" }} Twan's Doc Site. All rights reserved.<br>
-        <small>Disclaimer: De informatie op deze site is informatief en zonder garanties.</small><br>
-        <a href="https://www.linkedin.com/in/jouw-linkedin-profiel/" target="_blank" rel="noopener">LinkedIn</a>
+        &copy; {{ site.time | date: "%Y" }} Twan's Article Site. All rights reserved.<br>
+        <small>Disclaimer: The information on this site is for informational purposes only and is without guarantees.</small><br>
+        <a href="https://www.linkedin.com/in/tpelkmans/" target="_blank" rel="noopener">LinkedIn</a>
       </p>
     </footer>
   </body>
 </html>
+<script>
+document.querySelectorAll('.category-toggle').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var postList = btn.nextElementSibling;
+    var isOpen = postList.style.display === 'block';
+    document.querySelectorAll('.post-list').forEach(function(list) {
+      list.style.display = 'none';
+    });
+    document.querySelectorAll('.category-toggle').forEach(function(b) {
+      b.classList.remove('open');
+    });
+    if (!isOpen) {
+      postList.style.display = 'block';
+      btn.classList.add('open');
+    }
+  });
+});
+</script>
   </body>
 </html>
