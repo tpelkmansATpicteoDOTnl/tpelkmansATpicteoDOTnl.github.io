@@ -15,85 +15,114 @@
   </div>
   <div style="width:160px"></div> <!-- Spacer for symmetry, adjust width to match logo -->
 </header>
-  <div class="container">
-      <main class="content">
-  {{ content }}
-  {% if paginator %}
-    {% assign posts = paginator.posts %}
-  {% else %}
-    {% assign posts = site.posts %}
-  {% endif %}
-  {% for post in posts %}
-  {% unless post.categories contains "Archived" %}
-    <a href="{{ post.url | relative_url }}" class="article-link">
-    <article class="article-preview">
-      {% if post.image %}
-        <img src="{{ post.image | relative_url }}" alt="Article image" class="article-image" />
+<div class="container">
+  <main class="content">
+    <div id="search-results" style="display:none;"></div>
+    <div id="all-posts">
+      {{ content }}
+      {% if paginator %}
+        {% assign posts = paginator.posts %}
       {% else %}
-        <img src="{{ '/assets/img/Picteo.jpg' | relative_url }}" alt="Default" class="article-image" />
+        {% assign posts = site.posts %}
       {% endif %}
-      <div class="article-meta">
-        <span class="article-date">{{ post.date | date: "%Y-%m-%d" }}</span>
-        {% if post.author %}
-          &nbsp;|&nbsp;<span class="article-author">{{ post.author }}</span>
-        {% endif %}
-        <strong>Category:</strong>
-        {% if post.categories.size > 0 %}
-          {{ post.categories | join: ", " }}
+      {% for post in posts %}
+      {% unless post.categories contains "Archived" %}
+        <a href="{{ post.url | relative_url }}" class="article-link">
+        {% if post.image %}
+          <article class="article-preview with-small-image">
+            <img src="{{ post.image | relative_url }}" alt="Article image" class="article-image" />
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="article-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                {% if post.author %}
+                  &nbsp;|&nbsp;<span class="article-author">{{ post.author }}</span>
+                {% endif %}
+                <strong>Category:</strong>
+                {% if post.categories.size > 0 %}
+                  {{ post.categories | join: ", " }}
+                {% else %}
+                  None
+                {% endif %}
+              </div>
+              <h2 class="article-title">{{ post.title }}</h2>
+              {% if post.summary %}
+                <p class="article-summary">{{ post.summary }}</p>
+              {% endif %}
+            </div>
+          </article>
         {% else %}
-          None
+          <article class="article-preview">
+            <img src="{{ '/assets/img/Picteo.jpg' | relative_url }}" alt="Default" class="article-image" />
+            <div class="article-meta">
+              <span class="article-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+              {% if post.author %}
+                &nbsp;|&nbsp;<span class="article-author">{{ post.author }}</span>
+              {% endif %}
+              <strong>Category:</strong>
+              {% if post.categories.size > 0 %}
+                {{ post.categories | join: ", " }}
+              {% else %}
+                None
+              {% endif %}
+            </div>
+            <h2 class="article-title">{{ post.title }}</h2>
+            {% if post.summary %}
+              <p class="article-summary">{{ post.summary }}</p>
+            {% endif %}
+          </article>
         {% endif %}
-      </div>
-      <h2 class="article-title">{{ post.title }}</h2>
-    </article>
-    </a>
-  {% endunless %}
-  {% endfor %}
-</main>
-<aside class="sidebar">
-  <h3>Articles by Category</h3>
-  <ul class="category-list">
-    {% assign categories = site.categories | sort %}
-    {% for category in categories %}
-      {% assign posts_sorted = category[1] | sort: "date" | reverse %}
-      {% if category[0] == "Archived" %}
-        {% assign visible_posts = posts_sorted %}
-      {% else %}
-        {% assign visible_posts = "" | split: "" %}
-        {% for post in posts_sorted %}
-          {% unless post.categories contains "Archived" %}
-            {% assign visible_posts = visible_posts | push: post %}
-          {% endunless %}
-        {% endfor %}
-      {% endif %}
-      {% if visible_posts.size > 0 %}
-        <li class="category-item">
-          <button class="category-toggle" type="button">{{ category[0] }}</button>
-          <ul class="post-list" style="display:none;">
-            {% for post in visible_posts %}
-              <li>
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-                <span style="color: #888; font-size: 0.9em;">
-                  ({{ post.date | date: "%Y-%m-%d" }})
-                </span>
-              </li>
-            {% endfor %}
-          </ul>
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-</aside>
+        </a>
+      {% endunless %}
+      {% endfor %}
     </div>
-        </div> <!-- end .container -->
-    <footer class="site-footer">
-      <p>
-        &copy; {{ site.time | date: "%Y" }} Twan's Article Site. All rights reserved.<br>
-        <small>Disclaimer: The information on this site is for informational purposes only and is without guarantees.</small><br>
-        <a href="https://www.linkedin.com/in/tpelkmans/" target="_blank" rel="noopener">LinkedIn</a>
-      </p>
-    </footer>
-  </body>
+  </main>
+  <aside class="sidebar">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:1.5rem; position:relative;">
+      <input id="search-bar" type="text" placeholder="Search articles..." style="width: 220px; padding: 0.5em 1em; border-radius: 6px; border: 1px solid #ccc; font-size: 1em;" />
+      <button id="clear-search" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:1.2em; color:#888; cursor:pointer; display:none;">&times;</button>
+    </div>
+    <h3>Articles by Category</h3>
+    <ul class="category-list">
+      {% assign categories = site.categories | sort %}
+      {% for category in categories %}
+        {% assign posts_sorted = category[1] | sort: "date" | reverse %}
+        {% if category[0] == "Archived" %}
+          {% assign visible_posts = posts_sorted %}
+        {% else %}
+          {% assign visible_posts = "" | split: "" %}
+          {% for post in posts_sorted %}
+            {% unless post.categories contains "Archived" %}
+              {% assign visible_posts = visible_posts | push: post %}
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
+        {% if visible_posts.size > 0 %}
+          <li class="category-item">
+            <button class="category-toggle" type="button">{{ category[0] }}</button>
+            <ul class="post-list" style="display:none;">
+              {% for post in visible_posts %}
+                <li>
+                  <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+                  <span style="color: #888; font-size: 0.9em;">
+                    ({{ post.date | date: "%Y-%m-%d" }})
+                  </span>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </aside>
+</div> <!-- end .container -->
+<footer class="site-footer">
+  <p>
+    &copy; {{ site.time | date: "%Y" }} All rights reserved.<br>
+    <small>Disclaimer: The information on this site is for informational purposes only and is without guarantees.</small><br>
+    <a href="https://www.linkedin.com/in/tpelkmans/" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+</footer>
+</body>
 </html>
 <script>
 document.querySelectorAll('.category-toggle').forEach(function(btn) {
@@ -113,5 +142,60 @@ document.querySelectorAll('.category-toggle').forEach(function(btn) {
   });
 });
 </script>
-  </body>
-</html>
+<script id="posts-data" type="application/json">
+[
+{% if paginator %}
+  {% assign posts = paginator.posts %}
+{% else %}
+  {% assign posts = site.posts %}
+{% endif %}
+{% for post in posts %}
+  {% unless post.categories contains "Archived" %}
+    {
+      "title": {{ post.title | jsonify }},
+      "summary": {{ post.summary | default: '' | strip_html | jsonify }},
+      "url": {{ post.url | relative_url | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+  {% endunless %}
+{% endfor %}
+]
+</script>
+<script>
+const posts = JSON.parse(document.getElementById('posts-data').textContent);
+const searchBar = document.getElementById('search-bar');
+const clearSearchBtn = document.getElementById('clear-search');
+const resultsDiv = document.getElementById('search-results');
+const allPostsDiv = document.getElementById('all-posts');
+
+searchBar.addEventListener('input', function() {
+  clearSearchBtn.style.display = this.value ? '' : 'none';
+  const query = this.value.trim().toLowerCase();
+  if (!query) {
+    resultsDiv.style.display = 'none';
+    allPostsDiv.style.display = '';
+    return;
+  }
+  const matches = posts.filter(post =>
+    post.title.toLowerCase().includes(query) ||
+    post.summary.toLowerCase().includes(query)
+  );
+  let html = '';
+  if (matches.length === 0) {
+    html = '<p>No articles found.</p>';
+  } else {
+    html = matches.map(post =>
+      `<a href="${post.url}" class="article-link"><article class="article-preview"><h2 class="article-title">${post.title}</h2>${post.summary ? `<p class='article-summary'>${post.summary}</p>` : ''}</article></a>`
+    ).join('');
+  }
+  resultsDiv.innerHTML = html;
+  resultsDiv.style.display = '';
+  allPostsDiv.style.display = 'none';
+});
+clearSearchBtn.addEventListener('click', function() {
+  searchBar.value = '';
+  clearSearchBtn.style.display = 'none';
+  resultsDiv.style.display = 'none';
+  allPostsDiv.style.display = '';
+  searchBar.focus();
+});
+</script>
