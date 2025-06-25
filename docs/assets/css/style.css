@@ -65,14 +65,23 @@ body {
     border-left: none;
     border-top: 1px solid #eee;
   }
+  .site-title {
+    font-size: 1.3rem;
+  }
+  .site-subtitle {
+    font-size: 1rem;
+  }
+  .article-title {
+    font-size: 1.1rem;
+  }
 }
 .site-footer {
-  background: #2d3e50;
+  background: linear-gradient(to right, #73a8d4 0%, #fff 100%);
   color: #fff;
   text-align: center;
-  padding: 1.5rem 0 1rem 0;
+  padding: 0.7rem 0 0.5rem 0;
   margin-top: 2rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   position: fixed;
   left: 0;
   bottom: 0;
@@ -86,6 +95,32 @@ body {
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border: none;
+}
+.article-preview.with-small-image {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.article-preview.with-small-image .article-image {
+  max-width: 160px;
+  min-width: 80px;
+  width: 40vw;
+  height: auto;
+  margin-bottom: 0;
+}
+.article-preview.with-small-image .article-content {
+  flex: 1;
+}
+@media (max-width: 800px) {
+  .article-preview.with-small-image {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .article-preview.with-small-image .article-image {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 0.5rem;
+  }
 }
 .article-image {
   width: 100%;
