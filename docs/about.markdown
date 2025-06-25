@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-![Twan Pelkmans](/assets/img/twan.jpg){: style="max-width:180px; border-radius:90px; margin-bottom:1em;" }
+![Twan Pelkmans](/assets/img/Twan.jpg){: style="max-width:180px; border-radius:90px; margin-bottom:1em;" }
 
 # About Twan Pelkmans
 
