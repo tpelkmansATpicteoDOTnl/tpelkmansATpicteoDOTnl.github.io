@@ -1,1 +1,32 @@
+name: Sync Azure DevOps Repo using Entra ID
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *'  # Every hour
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Azure Login via OIDC
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Clone Azure DevOps Repo using Entra Token
+        run: |
+          ACCESS_TOKEN=$(az account get-access-token --resource https://dev.azure.com --query accessToken -o tsv)
+          git -c http.extraheader="AUTHORIZATION: bearer $ACCESS_TOKEN" clone https://dev.azure.com/picteo/articles/_git/articles azure-repo
+
+      - name: Push to GitHub
+        run: |
+          cd azure-repo
+          git remote add github https://github.com/tpelkmansATpicteoDOTnl/tpelkmansATpicteoDOTnl.github.io.git
